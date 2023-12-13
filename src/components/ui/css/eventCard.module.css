@@ -1,0 +1,38 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 10px;
+    border-radius: 2px;
+    border: 1px solid #222;
+    /* min-height: var(--card-min-height, 200px); */
+    min-height: minmax(var(--card-min-height, 200px), fit-content);
+    background-color: #303134;
+    cursor: default;
+}
+
+.card span {
+    color: #9aa0a6;
+}
+
+.grayOut {
+    opacity: 50%;
+    cursor: not-allowed;
+}
+
+.primaryCta {
+    margin-top: 7px;
+    padding: 5px 10px;
+    background-color: green;
+
+    border: none;
+
+    border-radius: 2.5px;
+
+    align-self: flex-end;
+    cursor: pointer;
+}
+
+.grayOut .primaryCta {
+    opacity: 50%;
+    cursor: not-allowed;
+}

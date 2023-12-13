@@ -1,0 +1,37 @@
+.table {
+    display: grid;
+    grid-template-columns: 1fr 2px 1fr;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 5px;
+
+    max-width: 1000px;
+}
+
+.divider {
+    background-color: #eee;
+}
+
+.tableHeader {
+    text-align: center;
+}
+
+.column {
+    --card-min-height: 150px;
+
+    max-height: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+    align-items: center;
+    gap: 5px;
+    
+    padding: 5px;
+    overflow-y: scroll;
+}
+
+@media (max-width:600px)  { 
+    .column {
+        grid-template-columns: 1fr;
+    }
+}

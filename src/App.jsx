@@ -1,12 +1,12 @@
-import EventsPad from './EventsPad';
 import EventRegistryContextComponent from './context/EventRegistryContext'
+import EventsRegistry from './pages/EventsRegistry';
 
 
 function App() {
 
   return (<EventRegistryContextComponent>
 
-    <EventsPad />
+    <EventsRegistry></EventsRegistry>
 
   </EventRegistryContextComponent>);
 }
