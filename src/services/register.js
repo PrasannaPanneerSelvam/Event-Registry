@@ -16,7 +16,10 @@ export function useRegisterEvents() {
         } catch (e) {
             setError(e);
         } finally {
-            setIsPending(false);
+            // Faking network speed
+            setTimeout(() => {
+                setIsPending(false);
+            }, 200);
         }
     }
 

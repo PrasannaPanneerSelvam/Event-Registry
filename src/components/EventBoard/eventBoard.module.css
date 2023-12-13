@@ -14,12 +14,15 @@
 
 .tableHeader {
     text-align: center;
+    cursor: default;
 }
 
 .column {
     --card-min-height: 150px;
 
-    max-height: 500px;
+    /* max-height: 500px; */
+    height: 500px;
+
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-content: start;
@@ -34,4 +37,11 @@
     .column {
         grid-template-columns: 1fr;
     }
+}
+
+
+.emptyArea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

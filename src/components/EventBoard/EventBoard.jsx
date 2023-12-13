@@ -23,7 +23,6 @@ function EventBoard({ selectionState, maxNoOfEventsAllowed, selectAnEvent, desel
       <div className={styles.divider}></div>
       <h2 className={styles.tableHeader}>Selected Events</h2>
 
-
       <div className={styles.column}>
         {
           selectionState.unselectedEvents.map(eachEvent => {
@@ -43,7 +42,10 @@ function EventBoard({ selectionState, maxNoOfEventsAllowed, selectAnEvent, desel
         }</div>
 
       <div className={styles.divider}></div>
-      <div className={styles.column}>{
+
+      { selectionState.selectedEvents.length === 0
+          ? <div className={styles.emptyArea}>No selected events</div>
+      : <div className={styles.column}>{
         selectionState.selectedEvents.map(eachEvent => {
           return (
             <EventCard
@@ -56,6 +58,7 @@ function EventBoard({ selectionState, maxNoOfEventsAllowed, selectAnEvent, desel
           );
         })
       }</div>
+    }
 
     </div>
   )
