@@ -1,7 +1,6 @@
 .label-list {
     display: flex;
     gap: 10px;
-    padding: 10px 0;
     align-items: center;
 }
 

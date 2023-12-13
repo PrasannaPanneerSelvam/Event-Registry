@@ -35,4 +35,5 @@
 .grayOut .primaryCta {
     opacity: 50%;
     cursor: not-allowed;
+    pointer-events: none;
 }

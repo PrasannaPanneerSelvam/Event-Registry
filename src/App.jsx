@@ -1,5 +1,5 @@
 import EventRegistryContextComponent from './context/EventRegistryContext'
-import EventsRegistry from './pages/EventsRegistry';
+import EventsRegistry from './pages/EventsRegistry/EventsRegistry';
 
 
 function App() {

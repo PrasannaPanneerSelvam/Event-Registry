@@ -1,16 +1,17 @@
 import { useEffect, useState, useReducer } from "react";
 
-import { getEventRegistryContext } from "./../context/EventRegistryContext";
+import { getEventRegistryContext } from "../../context/EventRegistryContext";
 
-import EventBoard from "../components/EventBoard/EventBoard";
-import SortOptions from "../components/ui/SortOptions/SortOptions";
+import EventBoard from "../../components/EventBoard/EventBoard";
+import SortOptions from "../../components/ui/SortOptions/SortOptions";
+import PrimaryButton from "../../components/ui/PrimaryButton/PrimaryButton";
 
-import { getComparatorFunction, sortFunctionNames } from "../Utils/EventsSort";
-import { useRegisterEvents } from "../services/register";
+import { getComparatorFunction, sortFunctionNames } from "../../Utils/EventsSort";
+import { useRegisterEvents } from "../../services/register";
+import { validateRegisteredEvents, filterOutRegisteredEventsFromAllEvents } from "../../validation/validateRegisteredEvents"
+import { sortArrayCurried } from "../../Utils/Array";
 
-
-import { validateRegisteredEvents, filterOutRegisteredEventsFromAllEvents } from "./../validation/validateRegisteredEvents"
-import { sortArrayCurried } from "../Utils/Array";
+import styles from "./eventsRegistry.module.css"
 
 function selectionStateHandler(state, { actionName, eventObject, eventsToBeSet, sortBy }) {
     if (actionName === 'select') {
@@ -103,7 +104,7 @@ function EventsRegistry() {
     }
 
     return (
-        <>
+        <div className={styles.content}>
             <SortOptions labels={sortFunctionNames} selectionCallback={selectionCallback} />
             <EventBoard
                 maxNoOfEventsAllowed={maxNoOfEventsAllowed}
@@ -115,14 +116,19 @@ function EventsRegistry() {
                     (eventObject) => dispatchSelectionState({ actionName: 'deselect', eventObject })
                 }
             />
-            <button onClick={() => {
-                if (isRegistrationPending) return;
-                registerEvent(selectionState.selectedEvents);
-            }}
-            >{isRegistrationPending ? "Submitting ..." :  "Submit" }</button>
-
-            <div>{registrationError?.message}</div>
-        </>
+            <PrimaryButton
+                onClick={() => {
+                    if (isRegistrationPending) return;
+                    registerEvent(selectionState.selectedEvents);
+                }}
+                text={isRegistrationPending ? "Submitting ..." :  "Submit" }
+                customStyles={{
+                    alignSelf: 'self-end',
+                    fontSize: '1.25rem'
+                }}
+            />
+            <div>{registrationError ? "Error on registeration" : ""}</div>
+        </div>
     )
 }
 
