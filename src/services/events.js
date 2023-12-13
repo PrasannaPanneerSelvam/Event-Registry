@@ -16,7 +16,7 @@ export async function fetchEvents(abortController) {
     return data;
 }
 
-export async function fetchRegisteredEvents(abortController) {
+export async function fetchRegisteredEvents() {
     const data = JSON.parse(localStorage.getItem("registered_events"));
     return data;
 }

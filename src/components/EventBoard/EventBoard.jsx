@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 
-import EventCard from "./ui/EventCard";
-import { doesHaveConflict } from "./../Utils/Array";
+import EventCard from "../ui/EventCard/EventCard";
+import { doesHaveConflict } from "../../Utils/Array";
 
-import styles from "./css/eventBoard.module.css";
+import styles from "./eventBoard.module.css";
 
 function EventBoard({ selectionState, maxNoOfEventsAllowed, selectAnEvent, deselectAnEvent }) {
 

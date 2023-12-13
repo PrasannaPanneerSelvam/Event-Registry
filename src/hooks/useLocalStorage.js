@@ -23,7 +23,7 @@ export default function useLocalStorage () {
 
     const getItem = (key) => {
         try {
-            if (localStorageState.hasOwnProperty(key)) {
+            if (Object.hasOwnProperty.call(localStorageState, key)) {
                 return localStorageState[key];
             }
 
@@ -34,7 +34,7 @@ export default function useLocalStorage () {
             return parsedValue;
 
         } catch (e) {
-            console.error("Error on getting item from local storage", key, value);
+            console.error("Error on getting item from local storage", key);
         }
     }
 
@@ -45,7 +45,7 @@ export default function useLocalStorage () {
             delete localStorageState[key];
             setLocalStorageState({...localStorageState});
         } catch (e) {
-            console.error("Error on removing item from local storage", key, value);
+            console.error("Error on removing item from local storage", key);
         }
     }
 

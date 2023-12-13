@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import styles from './css/filterOptions.module.css'
+import styles from './filterOptions.module.css'
 
 function FilterLabel({ text, onClick, isSelected, isAscending }) {
   const classNames = [styles.label];

@@ -1,7 +1,6 @@
 
-import { formatTime } from "./../../Utils/TimeHelper";
-import styles from './css/eventCard.module.css';
-
+import { formatTime } from "../../../Utils/TimeHelper";
+import styles from './eventCard.module.css';
 
 
 function EventCard({ eventObject, selectionAction, isDisabled = false, primaryActionText = "Click", selectionColor = "green" }) {

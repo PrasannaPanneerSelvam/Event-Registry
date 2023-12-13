@@ -16,14 +16,14 @@ const dateSuffixMap = {
 };
 
 function formatAMPM(date) {
-    const minutes = (date.getMinutes() + "").padStart(2, 0) ;
-    
+    const minutes = (date.getMinutes() + "").padStart(2, 0);
+
     let hours = date.getHours();
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours %= 12;
     hours = hours !== 0 ? hours : 12;
     return `${hours}:${minutes} ${ampm}`;
-  }
+}
 
 export function formatTime(date_string) {
 

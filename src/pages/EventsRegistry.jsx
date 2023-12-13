@@ -2,8 +2,8 @@ import { useEffect, useState, useReducer } from "react";
 
 import { getEventRegistryContext } from "./../context/EventRegistryContext";
 
-import EventBoard from "../components/EventBoard";
-import FilterOptions from "../components/ui/FilterOptions";
+import EventBoard from "../components/EventBoard/EventBoard";
+import FilterOptions from "../components/ui/FilterOptions/FilterOptions";
 
 import { getComparatorFunction, sortFunctionNames } from "../Utils/EventsSort";
 import { useRegisterEvents } from "../services/register";
@@ -116,9 +116,10 @@ function EventsRegistry() {
                 }
             />
             <button onClick={() => {
+                if (isRegistrationPending) return;
                 registerEvent(selectionState.selectedEvents);
             }}
-            >Submit</button>
+            >{isRegistrationPending ? "Submitting ..." :  "Submit" }</button>
 
             <div>{registrationError?.message}</div>
         </>
