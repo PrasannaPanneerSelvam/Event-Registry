@@ -1,6 +1,6 @@
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useState, useReducer, useMemo } from "react";
 
-import { getEventRegistryContext } from "../../context/EventRegistryContext";
+import { useEventRegistryContext } from "../../context/EventRegistryContext";
 
 import EventBoard from "../../components/EventBoard/EventBoard";
 import SortOptions from "../../components/ui/SortOptions/SortOptions";
@@ -51,56 +51,12 @@ function selectionStateHandler(state, { actionName, eventObject, eventsToBeSet, 
     throw new Error("Unknown event name : " + actionName);
 }
 
-
-
-function EventsRegistry() {
-    const { apiResponses, maxNoOfEventsAllowed, errorOnEventsFetch, waitingForEventApiReponses } = getEventRegistryContext();
-
-    const [selectionState, dispatchSelectionState] = useReducer(selectionStateHandler, {
-        unselectedEvents: [],
-        selectedEvents: [],
-        sortFunction: (anyArray) => anyArray,
-    });
-
+function EventsRegistryContent ({selectionState, updateSortByFunction, selectAnEvent, deselectAnEvent}) {
+    const { maxNoOfEventsAllowed } = useEventRegistryContext();
     const { registerEvent, isPending: isRegistrationPending, error: registrationError } = useRegisterEvents();
 
-
-    const [sortByFunction, setSortByFunction] = useState(() => () => 0);
-
     const selectionCallback = (sortByFunctionName, reverse) => {
-        setSortByFunction(() => getComparatorFunction(sortByFunctionName, reverse));
-    }
-
-    useEffect(() => {
-
-        const availableEventsFromApi = apiResponses.availableEvents,
-            registeredEventsFromApi = apiResponses.registeredEvents;
-
-        if (apiResponses.availableEvents === null) return;
-
-
-        const filteredRegisteredEvents = validateRegisteredEvents(availableEventsFromApi, registeredEventsFromApi),
-            filteredAvailableEvents = filterOutRegisteredEventsFromAllEvents(availableEventsFromApi, filteredRegisteredEvents);
-
-
-        dispatchSelectionState({
-            actionName: 'update_events', eventsToBeSet: {
-                selected: filteredRegisteredEvents,
-                unselected: filteredAvailableEvents
-            }
-        })
-    }, [apiResponses]);
-
-    useEffect(() => {
-        dispatchSelectionState({ actionName: 'update_sort_function', sortBy: sortByFunction ?? (() => 1) })
-    }, [sortByFunction])
-
-    if (waitingForEventApiReponses) {
-        return <div>Loading data ...</div>
-    }
-
-    if (errorOnEventsFetch !== null) {
-        return <div>Unable to fetch Events data!</div>
+        updateSortByFunction(() => getComparatorFunction(sortByFunctionName, reverse));
     }
 
     return (
@@ -109,12 +65,8 @@ function EventsRegistry() {
             <EventBoard
                 maxNoOfEventsAllowed={maxNoOfEventsAllowed}
                 selectionState={selectionState}
-                selectAnEvent={
-                    (eventObject) => dispatchSelectionState({ actionName: 'select', eventObject })
-                }
-                deselectAnEvent={
-                    (eventObject) => dispatchSelectionState({ actionName: 'deselect', eventObject })
-                }
+                selectAnEvent={selectAnEvent}
+                deselectAnEvent={deselectAnEvent}
             />
             <PrimaryButton
                 onClick={() => {
@@ -127,8 +79,70 @@ function EventsRegistry() {
                     fontSize: '1.25rem'
                 }}
             />
-            <div>{registrationError ? "Error on registeration" : ""}</div>
+            {registrationError && <div style={{color: "red", alignSelf: "center"}}>Error on registeration!</div>}
         </div>
+    )
+}
+
+function EventsRegistry() {
+    const { apiResponses, errorOnEventsFetch, waitingForEventApiReponses } = useEventRegistryContext();
+
+    const [selectionState, dispatchSelectionState] = useReducer(selectionStateHandler, {
+        unselectedEvents: [],
+        selectedEvents: [],
+        sortFunction: (anyArray) => anyArray,
+    });
+
+
+    const [sortByFunction, setSortByFunction] = useState(() => () => 0);
+
+    useEffect(() => {
+        if (waitingForEventApiReponses || errorOnEventsFetch !== null)
+            return;
+
+        const availableEventsFromApi = apiResponses.availableEvents,
+            registeredEventsFromApi = apiResponses.registeredEvents;
+
+        // if (apiResponses.availableEvents === null) return;
+
+        const filteredRegisteredEvents = validateRegisteredEvents(availableEventsFromApi, registeredEventsFromApi),
+            filteredAvailableEvents = filterOutRegisteredEventsFromAllEvents(availableEventsFromApi, filteredRegisteredEvents);
+
+        dispatchSelectionState({
+            actionName: 'update_events', eventsToBeSet: {
+                selected: filteredRegisteredEvents,
+                unselected: filteredAvailableEvents
+            }
+        })
+    }, [apiResponses, waitingForEventApiReponses, errorOnEventsFetch]);
+
+    useEffect(() => {
+        dispatchSelectionState({ actionName: 'update_sort_function', sortBy: sortByFunction ?? (() => 1) })
+    }, [sortByFunction])
+
+
+    const [selectAnEvent, deselectAnEvent] = useMemo(() => {
+        const selectAnEvent = (eventObject) => dispatchSelectionState({ actionName: 'select', eventObject });
+        const deselectAnEvent = (eventObject) => dispatchSelectionState({ actionName: 'deselect', eventObject });
+
+        return [selectAnEvent, deselectAnEvent]
+    }, [])
+
+    if (waitingForEventApiReponses) {
+        return <h3>Loading data ...</h3>
+    }
+
+    if (errorOnEventsFetch !== null) {
+        return <h3>Unable to fetch Events data!</h3>
+    }
+
+    return (
+        <EventsRegistryContent
+            selectionState={selectionState}
+            updateSortByFunction={setSortByFunction}
+            selectAnEvent={selectAnEvent}
+            deselectAnEvent={deselectAnEvent}
+        />
     )
 }
 

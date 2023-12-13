@@ -43,13 +43,13 @@ function EventRegistryContextComponent({ children }) {
         }
 
         return () => eventFetchCanceller();
-    }, [eventsData, eventsFetchError, eventsFetchPendingState]);
+    }, [eventsData, eventsFetchError, eventsFetchPendingState, eventFetchCanceller]);
 
     return (
         <EventRegistryContext.Provider value={{
             apiResponses: eventsApiState.responses,
-            waitingForEventApiReponses: eventsFetchPendingState,
-            errorOnEventsFetch: eventsFetchError,
+            waitingForEventApiReponses: eventsApiState.isPending,
+            errorOnEventsFetch: eventsApiState.error,
             maxNoOfEventsAllowed,
         }}>
             {children}
@@ -59,6 +59,6 @@ function EventRegistryContextComponent({ children }) {
 
 export default EventRegistryContextComponent;
 
-export const getEventRegistryContext = () => {
+export const useEventRegistryContext = () => {
     return useContext(EventRegistryContext);
 }

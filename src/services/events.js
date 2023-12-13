@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ApiMockData from "../ApiMockData";
 
 // Errors should be handled by the caller function
@@ -26,6 +26,9 @@ export function useHandleGetEvents() {
     const [isPending, setIsPending] = useState(true);
 
     const canceller = useRef();
+    const cancellerCallback = useCallback(() => {
+        canceller.current?.abort();
+    }, []);
 
     useEffect(() => {
         async function fetchAllEvents() {
@@ -46,8 +49,8 @@ export function useHandleGetEvents() {
 
                 // Comment this to remove fallback
                 availableEvents = ApiMockData;
-                
                 // setError(e);
+                // setIsPending(false);
                 // return;
             }
 
@@ -79,8 +82,6 @@ export function useHandleGetEvents() {
         eventsData,
         error,
         isPending,
-        canceller: () => {
-            canceller.current?.abort();
-        }
+        canceller: cancellerCallback,
     }
 }
