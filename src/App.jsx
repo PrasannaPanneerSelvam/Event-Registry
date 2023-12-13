@@ -1,12 +1,14 @@
+import EventsPad from './EventsPad';
+import EventRegistryContextComponent from './context/EventRegistryContext'
 
 
 function App() {
 
+  return (<EventRegistryContextComponent>
 
-  return (
-    <>
-    </>
-  )
+    <EventsPad />
+
+  </EventRegistryContextComponent>);
 }
 
 export default App
