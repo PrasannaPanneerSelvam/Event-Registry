@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from "react";
-// import ApiMockData from "../ApiMockData";
+import ApiMockData from "../ApiMockData";
 
 // Errors should be handled by the caller function
 async function fetchWithAbortControl(url, abortController) {
@@ -11,7 +11,6 @@ async function fetchWithAbortControl(url, abortController) {
 
 
 export async function fetchEvents(abortController) {
-    // const data = ApiMockData;
     const data = await fetchWithAbortControl("https://run.mocky.io/v3/c2d36c00-6e42-425f-8ffe-94547a81cd02", abortController);
     return data;
 }
@@ -44,8 +43,12 @@ export function useHandleGetEvents() {
                     console.log("Fetch call aborted while fetching available events");
                     return;
                 }
-                setError(e);
-                return;
+
+                // Comment this to remove fallback
+                availableEvents = ApiMockData;
+                
+                // setError(e);
+                // return;
             }
 
             canceller.current = new AbortController();

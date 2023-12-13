@@ -1,0 +1,8 @@
+Assumptions made:
+    i. Event registery page can be shown only on `get all events` api success
+    ii. In case of, failure on `get registered events` api, UI will be shown with zero registered events.
+    iii. Available event list can be fetched in a single api request
+
+
+Room for improvement:
+    i. Infinite scrolling or pagination can be added for displaying a huge set of available events
