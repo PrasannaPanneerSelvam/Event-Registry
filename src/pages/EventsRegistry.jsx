@@ -118,9 +118,9 @@ function EventsRegistry() {
             <button onClick={() => {
                 registerEvent(selectionState.selectedEvents);
             }}
-            >Register</button>
+            >Submit</button>
 
-            <div>{registrationError?.message} {isRegistrationPending + ""}</div>
+            <div>{registrationError?.message}</div>
         </>
     )
 }

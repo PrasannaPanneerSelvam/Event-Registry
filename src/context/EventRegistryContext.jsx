@@ -2,26 +2,21 @@ import { addMetaDataForUI } from '../Utils/EventsHelper';
 import { useHandleGetEvents } from '../services/events';
 import { createContext, useContext, useEffect, useReducer } from 'react'
 
-const EventRegistryContext = createContext();
-
 const maxNoOfEventsAllowed = 3;
 
-function updateApiReponses(state, { actionName, response, error }) {
+const EventRegistryContext = createContext();
+
+function apiResponseHandler(state, { actionName, response, error }) {
 
     if (actionName === "api_response") {
-
-        console.log("api_response", response)
-
-        if (response.availableEvents === null) {
-            return { ...state, isPending: false, error: "some" }
+        return {
+            ...state
+            , isPending: false
+            , responses: {
+                availableEvents: addMetaDataForUI(response.availableEvents),
+                registeredEvents: addMetaDataForUI(response.registeredEvents ?? []),
+            }
         }
-
-        const updatedResponses = {
-            availableEvents: addMetaDataForUI(response.availableEvents),
-            registeredEvents: addMetaDataForUI(response.registeredEvents ?? []),
-        }
-
-        return { ...state, isPending: false, responses: updatedResponses }
     }
 
     if (actionName === "api_error") {
@@ -31,10 +26,9 @@ function updateApiReponses(state, { actionName, response, error }) {
     throw Error('Unknown action name : ' + actionName);
 }
 
-
 function EventRegistryContextComponent({ children }) {
 
-    const [eventsApiState, dispatchApiResponses] = useReducer(updateApiReponses, {
+    const [eventsApiState, dispatchApiResponses] = useReducer(apiResponseHandler, {
         responses: { availableEvents: null, registeredEvents: null },
         error: null,
         isPending: true
@@ -43,20 +37,13 @@ function EventRegistryContextComponent({ children }) {
     const { eventsData, error: eventsFetchError, isPending: eventsFetchPendingState, canceller: eventFetchCanceller } = useHandleGetEvents();
 
     useEffect(() => {
-        if (!eventsFetchPendingState) {
-            console.log("Pending over", eventsFetchError);
-            if (eventsFetchError !== null) {
-                dispatchApiResponses({ actionName: "api_error", error: eventsFetchError });
-            } else if (eventsData !== null) {
-                console.log("Got data", JSON.parse(JSON.stringify(eventsData)));
-                dispatchApiResponses({ actionName: "api_response", response: eventsData });
-            }
+        if (eventsFetchPendingState === false) {
+            const actionName = eventsFetchError !== null ? "api_error" : "api_response";
+            dispatchApiResponses({ actionName, error: eventsFetchError, response: eventsData });
         }
 
         return () => eventFetchCanceller();
     }, [eventsData, eventsFetchError, eventsFetchPendingState]);
-
-    console.log("eventsFetchPendingState", eventsFetchPendingState)
 
     return (
         <EventRegistryContext.Provider value={{

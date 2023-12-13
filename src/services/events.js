@@ -2,75 +2,65 @@
 import { useEffect, useRef, useState } from "react";
 // import ApiMockData from "../ApiMockData";
 
+// Errors should be handled by the caller function
 async function fetchWithAbortControl(url, abortController) {
-    try {
-        const response = await fetch(url, {signal: abortController.signal});
-        const parsedResponseJson = await response.json();
-        return parsedResponseJson;
-    } catch (e) {
-        if (e.name === 'AbortError') {
-            console.log("Fetch call aborted");
-            return null;
-        }
-        throw e;
-    }
+    const response = await fetch(url, { signal: abortController.signal });
+    const parsedResponseJson = await response.json();
+    return parsedResponseJson;
 }
 
 
-export async function fetchEvents (abortController) {
+export async function fetchEvents(abortController) {
     // const data = ApiMockData;
     const data = await fetchWithAbortControl("https://run.mocky.io/v3/c2d36c00-6e42-425f-8ffe-94547a81cd02", abortController);
     return data;
 }
 
-export async function fetchRegisteredEvents (abortController) {
+export async function fetchRegisteredEvents(abortController) {
     const data = JSON.parse(localStorage.getItem("registered_events"));
     return data;
 }
 
-
-export function useHandleGetEvents () {
-    const [eventsData, setEventsData] = useState(null)    
+export function useHandleGetEvents() {
+    const [eventsData, setEventsData] = useState(null)
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
-    
+
     const canceller = useRef();
 
     useEffect(() => {
-        async function fetchAllEvents () {
+        async function fetchAllEvents() {
             canceller.current?.abort();
             canceller.current = new AbortController();
-            
+
             setIsPending(true);
 
-            let allEvents = null, registeredEvents = null;
+            let availableEvents = null, registeredEvents = null;
 
             try {
-                allEvents = await fetchEvents(canceller.current);
+                availableEvents = await fetchEvents(canceller.current);
             } catch (e) {
-                console.log("EE", e)
                 if (e.name === 'AbortError') {
-                    console.log("Fetch call aborted");
+                    console.log("Fetch call aborted while fetching available events");
                     return;
                 }
                 setError(e);
                 return;
             }
 
-            canceller.current = new AbortController();          
+            canceller.current = new AbortController();
 
             try {
                 registeredEvents = await fetchRegisteredEvents(canceller.current);
             } catch (e) {
                 if (e.name === 'AbortError') {
-                    console.log("Fetch call aborted");
+                    console.log("Fetch call aborted while fetching registered events");
                     return;
                 }
             }
 
-            console.log("Done!", allEvents, registeredEvents)
             setEventsData({
-                availableEvents: allEvents,
+                availableEvents,
                 registeredEvents
             })
 
@@ -81,7 +71,6 @@ export function useHandleGetEvents () {
 
         return () => canceller.current?.abort();
     }, [])
-
 
     return {
         eventsData,
