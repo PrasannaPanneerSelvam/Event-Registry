@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import styles from './filterOptions.module.css'
+import styles from './sortOptions.module.css'
 
-function FilterLabel({ text, onClick, isSelected, isAscending }) {
+function SortLabel({ text, onClick, isSelected, isAscending }) {
   const classNames = [styles.label];
   if (isSelected) {
     classNames.push(styles.active);
@@ -28,7 +28,7 @@ function FilterOptions({ labels, selectionCallback }) {
     <div className={styles['label-list']}>
       <span>Sort by</span>
       {labels.map((label) => (
-        <FilterLabel
+        <SortLabel
           key={label + '-filter'}
           text={label}
           onClick={(labelText) => {

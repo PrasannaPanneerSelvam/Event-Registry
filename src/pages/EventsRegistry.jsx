@@ -3,7 +3,7 @@ import { useEffect, useState, useReducer } from "react";
 import { getEventRegistryContext } from "./../context/EventRegistryContext";
 
 import EventBoard from "../components/EventBoard/EventBoard";
-import FilterOptions from "../components/ui/FilterOptions/FilterOptions";
+import SortOptions from "../components/ui/SortOptions/SortOptions";
 
 import { getComparatorFunction, sortFunctionNames } from "../Utils/EventsSort";
 import { useRegisterEvents } from "../services/register";
@@ -104,7 +104,7 @@ function EventsRegistry() {
 
     return (
         <>
-            <FilterOptions labels={sortFunctionNames} selectionCallback={selectionCallback} />
+            <SortOptions labels={sortFunctionNames} selectionCallback={selectionCallback} />
             <EventBoard
                 maxNoOfEventsAllowed={maxNoOfEventsAllowed}
                 selectionState={selectionState}
