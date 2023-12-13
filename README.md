@@ -1,5 +1,7 @@
 # Event-Registry
 
+Demo page : https://prasannapanneerselvam.github.io/Event-Registry/
+
 ### Project setup
 git clone https://github.com/PrasannaPanneerSelvam/Event-Registry.git
 
